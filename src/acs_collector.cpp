@@ -1,7 +1,7 @@
 //#include "../include/spacehauc-i2c-dev.h"
 #include "../include/spacehauc-i2c-mock.h"
 #include "../include/acs_util.h"
-
+#include "../include/publisher.h"
 //using namespace spacehauc_i2c;
 using namespace spacehauc_i2c_mock;
 
@@ -10,10 +10,10 @@ using namespace spacehauc_i2c_mock;
 int main(int argc, char const *argv[]) {
         ACS_DATA_BLOCK publisher_data;
 
-        //publisher<bool> spin_stab_pub("SPIN_STAB", argv[1]);
-        //publisher<bool> sun_point_pub("SUN_POINT", argv[1]);
-        //publisher<bool> dark_side_pub("DARK_SIDE", argv[1]);
-        //publisher<ACS_DATA_BLOCK> acs_pub("ACS_DATA", argv[1]);
+        publisher<bool> spin_stab_pub("SPIN_STAB", std::stoi(argv[1]));
+        publisher<bool> sun_point_pub("SUN_POINT", std::stoi(argv[1]));
+        publisher<bool> dark_side_pub("DARK_SIDE", std::stoi(argv[1]));
+        publisher<ACS_DATA_BLOCK> acs_pub("ACS_DATA", std::stoi(argv[1]));
 
         int bus = 1;
         spacehauc_i2c_mock::I2C_Bus::init(bus);
@@ -64,10 +64,10 @@ int main(int argc, char const *argv[]) {
 
                 publisher_data.print();
 
-                //acs_pub.publish(publisher_data);
-                //dark_side_pub.publish(isDarkSide());
-                //spin_stab_pub.publish(isSpinStab());
-                //sun_point_pub.publish(isSunPointed());
+                acs_pub.publish(publisher_data);
+                dark_side_pub.publish(isDarkSide(publisher_data));
+                spin_stab_pub.publish(isSpinStab(publisher_data));
+                sun_point_pub.publish(isSunPointed(publisher_data));
 
         }
         return 0;
